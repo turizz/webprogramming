@@ -49,6 +49,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $imageErr = 'Accepted files are jpg, jpeg, and png only.';
     }
 
+    $maxFileSize = 5242880;
+    $imageSize = $_FILES['product_image']['size'];
+
+    $imageFileType = strtolower(pathinfo($image, PATHINFO_EXTENSION));
+    if(empty($image)){
+        $imageErr = 'Product image is required.';
+    }else if(!in_array($imageFileType, $allowedType)){
+        $imageErr = 'Accepted files are jpg, jpeg, and png only.';
+    }else if (($imageSize > $maxFileSize) || ($imageSize == 0)){
+        $imageErr = 'File size is too large. Max file size is 5MB.';
+    }
+
     // If there are validation errors, return them as JSON
     if(!empty($codeErr) || !empty($nameErr) || !empty($categoryErr) || !empty($priceErr) || !empty($imageErr)){
         echo json_encode([
